@@ -11,13 +11,26 @@ import UIKit
 @IBDesignable
 class CustomizedTabBar: UITabBar {
 
-	override func draw(_ rect: CGRect) {
+	private var shapeLayer: CALayer?
+
+	private func addShape() {
 		let shapeLayer = CAShapeLayer()
 		shapeLayer.path = createPath()
 		shapeLayer.strokeColor = UIColor.lightGray.cgColor
 		shapeLayer.fillColor = UIColor.white.cgColor
 		shapeLayer.lineWidth = 1.0
-		self.layer.insertSublayer(shapeLayer, at: 0)
+
+		if let oldShapeLayer = self.shapeLayer {
+			self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
+		} else {
+			self.layer.insertSublayer(shapeLayer, at: 0)
+		}
+
+		self.shapeLayer = shapeLayer
+	}
+
+	override func draw(_ rect: CGRect) {
+		self.addShape()
 	}
 
 	func createPath() -> CGPath {
